@@ -1,5 +1,7 @@
 ## Unreleased
 
+- **A screen can be a Bluetooth proxy with the BLE advert filter in front of it** (needs ESPHome 2026.10). It is off until a screen's Override YAML adds `packages/features/ble-proxy.yaml`; docs/BLE_PROXY.md says how and for which boards.
+
 - **Tessera is looking for funding.** The home overview asks for it, before the support card, with a button that mails Max: a day job comes first, and Tessera needs funding to stay alive. "Not now" puts it away for a week.
 
 ## 0.4.93 (firmware 0.59.0)

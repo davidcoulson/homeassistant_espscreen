@@ -1,0 +1,42 @@
+# ESP Screens - a Bluetooth proxy for Home Assistant, with David's ble_advert_filter in front of it. Off unless a
+# screen asks for it (docs/BLE_PROXY.md): add this file to the screen's Override YAML.
+#
+# The component (github.com/davidcoulson/esphome-ble-advert-filter) drops the adverts nobody uses on the screen itself,
+# so a wall panel does not spend its Wi-Fi and CPU forwarding every phone that walks past. It plugs into a hook that
+# bluetooth_proxy gained in ESPHome 2026.10, so this file asks for that. On an ESP32-P4 the Bluetooth comes through the
+# ESP32-C6 (hardware/esp32p4-c6.yaml, esp32_hosted); the Bluetooth proxy runs over that link.
+esphome:
+  min_version: 2026.10.0
+
+substitutions:
+  # The component's release, and the distance beyond which an advert is dropped (dBm; the Home Assistant number "BLE RSSI
+  # Threshold" changes it afterwards without a build). A board or a screen may override either.
+  BLE_FILTER_REF: v2.0.4
+  BLE_RSSI_THRESHOLD: "-80"
+  # Apple's HomeKit accessories always get through. iBeacons are dropped with the rest of Apple's traffic; a screen
+  # that tracks one adds `allow_ibeacon:` with its UUID to `ble_advert_filter:` in its Override YAML (docs/BLE_PROXY.md).
+  BLE_ALLOW_HOMEKIT: "true"
+
+external_components:
+  - source:
+      type: git
+      url: https://github.com/davidcoulson/esphome-ble-advert-filter
+      ref: ${BLE_FILTER_REF}
+    components: [ble_advert_filter]
+
+esp32_ble_tracker:
+
+bluetooth_proxy:
+  active: true
+
+ble_advert_filter:
+  rssi_threshold: ${BLE_RSSI_THRESHOLD}
+  # Apple's background chatter (Continuity); HomeKit accessories are let back in below.
+  manufacturer_blocklist:
+    - 0x004C
+  allow_homekit: ${BLE_ALLOW_HOMEKIT}
+
+number:
+  - platform: ble_advert_filter
+    rssi_threshold:
+      name: "BLE RSSI Threshold"

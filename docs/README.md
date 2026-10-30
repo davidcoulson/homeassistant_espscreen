@@ -80,6 +80,7 @@
 - [FLASH_LAYOUT.md](FLASH_LAYOUT.md): the partition table of a board with 4 MB of flash, and how a screen gets it
   without losing its settings (the technical side of UPDATING_4MB_SCREENS.md).
 - [CAMERA.md](CAMERA.md): camera pictures and album covers, from Home Assistant to the screen.
+- [BLE_PROXY.md](BLE_PROXY.md): a screen as a Bluetooth proxy with the BLE advert filter, turned on from the Override YAML.
 - [PICTURE_ARCHITECTURE.md](PICTURE_ARCHITECTURE.md): the building blocks under pictures and cameras in the firmware,
   the app and the Screen camera plugin, their seams, and the layers they are moved into (a design with its recipe).
 - [PLATFORM_PLAN.md](PLATFORM_PLAN.md): what Tessera builds next on the ESP32-P4 and in what order: the hardware layer
