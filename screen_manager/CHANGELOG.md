@@ -1,5 +1,7 @@
 ## Unreleased
 
+- **The app builds with ESPHome 2026.10.1** (it was 2026.9.0). The boards' minimum versions stay as they were, so a build in your own ESPHome Device Builder works as before.
+
 - **Tessera is looking for funding.** The home overview asks for it, before the support card, with a button that mails Max: a day job comes first, and Tessera needs funding to stay alive. "Not now" puts it away for a week.
 
 ## 0.4.93 (firmware 0.59.0)

@@ -94,7 +94,7 @@ substitutions:
 # board file's, the credentials the entry file's (secrets.yaml, see secrets.yaml.example).
 # ============================================================
 esphome:
-  # The oldest ESPHome these packages build with, not the one the add-on ships (2026.9.0, screen_manager/Dockerfile): an
+  # The oldest ESPHome these packages build with, not the one the add-on ships (2026.10.1, screen_manager/Dockerfile): an
   # add-on or ESPHome Device Builder that isn't updated yet keeps building every screen (firmware 0.2.75+). Raise it in a
   # release of its own, with the camera images' `image:` form (before ESPHome 2027.1) and OTA with the api key for new
   # screens; docs/RELEASING.md, "ESPHome versions".
