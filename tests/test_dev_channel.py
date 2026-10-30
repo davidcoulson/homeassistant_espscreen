@@ -205,7 +205,7 @@ class Release(unittest.TestCase):
 
     def test_the_stable_app_builds_from_its_own_tag(self):
         core.set_version('0.4.85')
-        for channel, ref in ((None, 'main'), ('main', 'screens-v0.4.85'), ('dev', 'dev')):
+        for channel, ref in ((None, 'crowpanel7'), ('main', 'screens-v0.4.85'), ('dev', 'dev')):
             with self.subTest(channel):
                 set_channel(channel)
                 self.assertEqual(core.ref(), ref)
