@@ -46,7 +46,8 @@ iBeacons are dropped with the rest of Apple's traffic. To let yours through, add
 
 - `esphome config` with ESPHome 2026.10.1 (secrets stubbed) on crowpanel7 (P4) and waveshare7b (S3), with the file
   added through `packages:`; both valid, and the merged YAML shows the three components and the number.
-- `esphome compile` of the same two: see "Compile" below.
+- `esphome compile` 2026.10.1 of the same two, on the `esphome-2026-10` branch (this branch's add-on still ships 2026.9.0,
+  which cannot build the plugin): both link. waveshare7b: flash 42.0 %, RAM 57.4 %; crowpanel7: flash 45.6 %, RAM 28.1 %.
 - `tools/check_packages.py`, `tools/generate_entries.py --check`, and the unit tests named in the commit.
 
 ## Not tested
@@ -56,5 +57,3 @@ iBeacons are dropped with the rest of Apple's traffic. To let yours through, add
   coexistence the proxy costs while the screen runs its UI, camera and audio.
 - The remote `packages:` form above from the fork's branch (config was checked with a relative `!include`).
 - The proxy's three connection slots are ESPHome's default; not tuned for a panel.
-
-## Compile
