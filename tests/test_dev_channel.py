@@ -211,7 +211,7 @@ class Release(unittest.TestCase):
                 self.assertEqual(core.ref(), ref)
                 screen = load(installation_yaml({'board': 'guition', 'name': 'hall', 'friendly_name': 'Hall'}))
                 self.assertEqual(screen['packages']['display']['ref'], ref)
-                self.assertEqual(screen['substitutions'].get('GITHUB_REF'), None if ref == 'main' else ref)
+                self.assertEqual(screen['substitutions'].get('GITHUB_REF'), None if ref == 'crowpanel7' else ref)
         # Without a version the Supervisor gave (or one that is no release number), the stable app stays on main.
         set_channel('main')
         for version in (None, '', 'dev', '0.4', '0.4.85b1'):
