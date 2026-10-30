@@ -7539,6 +7539,19 @@ inline void render_forecast(Widgets &w,const Tile &t,bool large,int width,int he
 inline void render_graph(Widgets &w,const Tile &t,bool large,int x,int y,int width,int height) {
   begin_extra(w,"graph",x+width,y+height);
   float minimum=INFINITY,maximum=-INFINITY;for(float v:t.history)if(std::isfinite(v)){minimum=std::min(minimum,v);maximum=std::max(maximum,v);}
+  // The y axis: the highest and the lowest at the left in the axis font, with the decimals the value shows. A strip
+  // with no room for two lines (a single-width card) keeps the bare curve.
+  const lv_font_t *axis=small_font?small_font:w.value_font;const int line_h=lv_font_get_line_height(axis);
+  const bool labels=std::isfinite(minimum) && height>=2*line_h+(ui::px(2));
+  if(labels){
+    const size_t mark=t.state.find_first_of(".,");int decimals=0;
+    for(size_t i=mark==std::string::npos?t.state.size():mark+1;i<t.state.size() && std::isdigit((unsigned char)t.state[i]);++i)++decimals;
+    const std::string high=history_view::number(maximum,decimals,""),low=history_view::number(minimum,decimals,"");
+    const int axis_w=std::max(text_width(high,axis),text_width(low,axis))+(ui::px(large?6:4));
+    lv_obj_remove_flag(part_label(w,1,axis,x,y,axis_w,LV_TEXT_ALIGN_LEFT,high),LV_OBJ_FLAG_HIDDEN);
+    lv_obj_remove_flag(part_label(w,2,axis,x,y+height-line_h,axis_w,LV_TEXT_ALIGN_LEFT,low),LV_OBJ_FLAG_HIDDEN);
+    x+=axis_w;width-=axis_w;
+  }else for(unsigned i:{1u,2u})if(w.parts[i])lv_obj_add_flag(w.parts[i],LV_OBJ_FLAG_HIDDEN);
   lv_point_precise_t raw[24];unsigned n=0;int stroke=ui::px(large?3:2),top=stroke;
   for(unsigned i=0;i<t.history.size() && i<24;++i){
     if(!std::isfinite(t.history[i]))continue;
@@ -8977,16 +8990,16 @@ inline void render_slot(size_t slot) {
     else render_forecast(w,t,large_tile,content_w,content_h);
     lap(swipe_profile::CUSTOM);
   }else{
-  // A single-width graph takes the slider strip; a wide graph takes the right half.
-  bool graph_strip=graph && !w.wide, graph_side=graph && w.wide;
-  int chart_w=graph_side?content_w*55/100:0;
+  // A graph takes the slider strip under the head; on a wide card the strip is all the room under the two lines,
+  // tall enough for the axis render_graph draws (the right half it took before had no room for a head above it).
+  bool graph_strip=graph;
   lap(swipe_profile::GEOMETRY);
   int panel_w=with_panel && !graph?layout_panel(w,t,large_tile,content_w,content_h):0;
   if(!panel_w)hide_panel(w);
   lap(swipe_profile::PANEL);
   // A slot that just held a full card gets its own name font, one-line box and left-aligned text back. A name with
   // room gets bigger letters (name_font).
-  const lv_font_t *title_face=name_font(w,content_w-chart_w-panel_w);
+  const lv_font_t *title_face=name_font(w,content_w-panel_w);
   set_font(w.title,title_face);set_text_align(w.title,LV_TEXT_ALIGN_LEFT);set_text_align(w.value,LV_TEXT_ALIGN_LEFT);
   title_height=lv_font_get_line_height(title_face);lv_obj_set_height(w.title,title_height);
   int line_gap=head_gap(large_tile),text_height=title_height+line_gap+value_height;
@@ -9011,7 +9024,8 @@ inline void render_slot(size_t slot) {
     const int look_h=std::min<int>(content_h,ui::cell_height()-lv_obj_get_style_space_top(w.tile,LV_PART_MAIN)-lv_obj_get_style_space_bottom(w.tile,LV_PART_MAIN));
     const int head_need=look_h-text_height-gap>=least?text_height:std::max(title_height,circle_size);
     slider_height=std::max(least,std::min(slider_height,look_h-head_need-gap));
-    if(graph_strip)slider_height+=content_h-look_h;
+    if(graph_strip && w.wide)slider_height=std::max(least,content_h-text_height-gap);
+    else if(graph_strip)slider_height+=content_h-look_h;
   }
   int header_height=(mini||graph_strip)?content_h-slider_height-(ui::px(large_tile?6:3)):content_h;
   int text_y=std::max(0,(header_height-text_height)/2);
@@ -9039,7 +9053,7 @@ inline void render_slot(size_t slot) {
   tile_picture_place(w,t,circle_size,0,circle_y);
   // Use the requested coordinates: LVGL getters still return the previous
   // layout until its next pass when a slot changes from watch/slider to normal.
-  int text_room=content_w-chart_w-(graph_side?(ui::px(large_tile?10:6)):0)-panel_w;
+  int text_room=content_w-panel_w;
   // A navigation tile ends in a chevron, as a row in Home Assistant's settings does.
   const lv_font_t *chevron_font=mini_icon_font?mini_icon_font:w.icon_font;
   int chevron_w=t.is_page() && !watch?lv_font_get_line_height(chevron_font):0;
@@ -9130,7 +9144,6 @@ inline void render_slot(size_t slot) {
   else lv_obj_add_flag(w.slider,LV_OBJ_FLAG_HIDDEN);
   lap(swipe_profile::GEOMETRY);
   if(graph_strip)render_graph(w,t,large_tile,0,content_h-slider_height,content_w,slider_height);
-  else if(graph_side)render_graph(w,t,large_tile,content_w-chart_w,0,chart_w,content_h);
   else hide_extra(w);
   lap(swipe_profile::CUSTOM);
   }
@@ -9213,7 +9226,7 @@ inline void render_slot(size_t slot) {
   else if(w.extra_mode=="calm"||w.extra_mode=="flip")paint_face(w,title_color,value_color,icon_color);
   else for(unsigned i=0;i<w.parts.size() && w.extra_mode!="media" && w.extra_mode!="tall" && w.extra_mode!="cover_tilt" && w.extra_mode!="forecast" && w.extra_mode!="forecast_rows" && w.extra_mode!="week" && w.extra_mode!="favorite" && w.extra_mode!="energy" && w.extra_mode!="calendar_card" && w.extra_mode!="meter_card";++i){
     auto *p=w.parts[i];if(!p)continue;
-    bool muted=w.extra_mode=="sunpath" ? i>=1 : w.extra_mode=="calendar" ? i==15||i==17 : w.extra_mode=="digital" ? i==16||i==17 : i==16;
+    bool muted=w.extra_mode=="sunpath"||w.extra_mode=="graph" ? i>=1 : w.extra_mode=="calendar" ? i==15||i==17 : w.extra_mode=="digital" ? i==16||i==17 : i==16;
     if(lv_obj_check_type(p,&lv_label_class))set_color(p,LV_STYLE_TEXT_COLOR,muted?value_color:title_color);
     else if(w.extra_mode=="sunpath")continue;
     else if(lv_obj_check_type(p,&lv_line_class))set_color(p,LV_STYLE_LINE_COLOR,w.extra_mode=="graph"?color:i==18?lv_color_hex(theme::foreground(theme::ha::ALARM)):i<12?value_color:i==13?icon_color:title_color);
@@ -10069,7 +10082,7 @@ inline bool check_tile_geometry() {
         bool inside=part.x1>=room.x1 && part.x2<=room.x2 && part.y1>=room.y1 && part.y2<=room.y2;
         if(!inside)ESP_LOGE("ui_test","Part bounds slot=%u mode=%s part=%d,%d..%d,%d room=%d,%d..%d,%d",(unsigned)w.index,w.extra_mode.c_str(),(int)part.x1,(int)part.y1,(int)part.x2,(int)part.y2,(int)room.x1,(int)room.y1,(int)room.x2,(int)room.y2);
         fits=fits && inside;
-        if(w.extra_mode=="graph" && !custom)fits=fits && (w.wide && !w.full?part.x1>value.x2:part.y1>value.y2);
+        if(w.extra_mode=="graph" && !custom)fits=fits && part.y1>value.y2;
       }
     }
     // The board's bedside digits fit its page in one of the three arrangements (bedside_digits, looks/shared/digits.yaml).
