@@ -176,9 +176,9 @@ int main() {
   assert(PAGE_COUNT == 5);
   for (uint8_t p = 0; p < PAGE_COUNT; ++p) {
     const Page &page = pages[p];
-    // At most nine rows a page: This screen holds nine since Debug mode (Calibrate touch only on a resistive panel), and
+    // At most eleven rows a page: This screen holds eleven since Cycle pages (Calibrate touch only on a resistive panel), and
     // the pager takes any count the glass cannot show at once (fitting_rows).
-    assert(page.title != NO_TEXT && *screen_text::tr(page.title) && page.count && page.count <= 9);
+    assert(page.title != NO_TEXT && *screen_text::tr(page.title) && page.count && page.count <= 11);
     for (uint8_t i = 0; i < page.count; ++i) {
       const Row &row = page.rows[i];
       assert(row.label != NO_TEXT && *label_text(row));
@@ -273,6 +273,7 @@ int main() {
       {"home_on_standby", 1, 1}, {"swipe_pages", 2, 1}, {"rotation", 100, 90}, {"rotation", 400, 270},
       {"auto_home", 0, 0}, {"auto_home_seconds", 5, 30}, {"auto_home_seconds", 99999, 3600},
       {"dark_mode", 7, 1}, {"page_buttons", 0, 0}, {"home_button", 0, 0},
+      {"auto_cycle", 1, 1}, {"auto_cycle_seconds", 5, 10}, {"auto_cycle_seconds", 99999, 600},
   };
   for (const auto &c : cases) {
     result = set(c.key, c.value);
@@ -282,7 +283,7 @@ int main() {
   assert(screen_settings::current.standby_seconds == 86400 && screen_settings::current.brightness == 100);
   assert(screen_settings::current.night_start == 0 && screen_settings::current.night_end == 1439);
   assert(swipe_pages == 1 && rotation == 270 && auto_home == 0 && auto_home_seconds == 3600 && dark_mode == 1 &&
-         page_buttons == 0 && home_button == 0);
+         page_buttons == 0 && home_button == 0 && auto_cycle == 1 && auto_cycle_seconds == 600);
   assert(screen_settings::current.valid());
   // Dark mode again is the same look: nothing stored, applied or reported; off is a change.
   {

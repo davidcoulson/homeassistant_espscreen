@@ -175,6 +175,8 @@
       "swipe_between_pages": "Deslizar entre páginas",
       "page_buttons": "Botões de página",
       "home_button": "Mostrar o botão de início",
+      "cycle_pages": "Alternar páginas",
+      "every": "A cada",
       "rotation": "Rotação",
       "address": "Endereço",
       "firmware": "Firmware",
@@ -3064,6 +3066,8 @@
         "swipe_pages": "Deslizar entre páginas",
         "page_buttons": "Botões de página",
         "home_button": "Mostrar o botão de início",
+        "auto_cycle": "Alternar páginas",
+        "auto_cycle_seconds": "A cada",
         "rotation": "Rotação"
       },
       "actions": {

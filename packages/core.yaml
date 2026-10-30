@@ -821,6 +821,7 @@ interval:
           then:
             - script.execute: dim_display
       - script.execute: back_to_page_1_when_due
+      - script.execute: cycle_page_when_due
       # A page Home Assistant asked for while the pages were being prepared (show_page) opens once they are ready.
       - lambda: |-
           if (runtime_tiles::wanted_page > 0 && runtime_tiles::navigation_ready()) {
@@ -889,6 +890,12 @@ globals:
     initial_value: '0'
 
   - id: last_use_ms
+    type: uint32_t
+    restore_value: no
+    initial_value: '0'
+
+  # The last step of Page auto-cycle, so a page stays up for the whole interval.
+  - id: last_cycle_ms
     type: uint32_t
     restore_value: no
     initial_value: '0'
@@ -1788,6 +1795,17 @@ switch:
     turn_off_action:
       - lambda: 'settings_screen::set("auto_home", 0);'
   - platform: template
+    id: setting_auto_cycle
+    name: "Cycle pages"
+    icon: "mdi:page-next-outline"
+    entity_category: config
+    restore_mode: DISABLED
+    lambda: return settings_screen::auto_cycle != 0;
+    turn_on_action:
+      - lambda: 'settings_screen::set("auto_cycle", 1);'
+    turn_off_action:
+      - lambda: 'settings_screen::set("auto_cycle", 0);'
+  - platform: template
     id: setting_home_on_standby
     name: "Back to page 1 on standby"
     icon: "mdi:home-import-outline"
@@ -2471,7 +2489,8 @@ script:
                                        std::make_pair(id(setting_standby_brightness), settings.standby_brightness),
                                        std::make_pair(id(setting_night_brightness), settings.night_brightness),
                                        std::make_pair(id(setting_standby_seconds), settings.standby_seconds),
-                                       std::make_pair(id(setting_auto_home_seconds), settings_screen::auto_home_seconds)}) {
+                                       std::make_pair(id(setting_auto_home_seconds), settings_screen::auto_home_seconds),
+                                       std::make_pair(id(setting_auto_cycle_seconds), settings_screen::auto_cycle_seconds)}) {
             if (!entity->has_state() || entity->state != value) entity->publish_state(value);
           }
           for (auto [entity, minutes] : {std::make_pair(id(setting_night_start), settings.night_start), std::make_pair(id(setting_night_end), settings.night_end)}) {
@@ -2526,6 +2545,29 @@ script:
               return away && (millis() - id(last_use_ms)) > (uint32_t) runtime_tiles::auto_home_seconds * 1000UL;
           then:
             - script.execute: go_home
+
+  # Page auto-cycle for a wall panel: the same clock as Back to page 1 (the last touch), plus the time of the last
+  # step, so a page stays up for the whole interval. Back to page 1 is checked first and wins when both are on.
+  - id: cycle_page_when_due
+    then:
+      - if:
+          condition:
+            lambda: |-
+              if (!runtime_tiles::auto_cycle || id(touch_down) || id(calibration_active) || id(alert_active)) return false;
+              if (runtime_tiles::doorbell_holds() || id(display_dimmed)) return false;
+              if (settings_screen::visible() || screen_hooks::is_away() || runtime_tiles::colour_shown() ||
+                  (runtime_tiles::detail_root && !lv_obj_has_flag(runtime_tiles::detail_root, LV_OBJ_FLAG_HIDDEN))) return false;
+              if (runtime_tiles::page_count() < 2) return false;
+              const uint32_t due = (uint32_t) runtime_tiles::auto_cycle_seconds * 1000UL, now = millis();
+              // Back to page 1 wins: once it is due, the screen goes home and stays there until the next touch.
+              if (runtime_tiles::auto_home && (now - id(last_use_ms)) > (uint32_t) runtime_tiles::auto_home_seconds * 1000UL) return false;
+              return (now - id(last_use_ms)) > due && (now - id(last_cycle_ms)) > due;
+          then:
+            - lambda: |-
+                id(last_cycle_ms) = millis();
+                // sequential_page skips detail pages and does not wrap: at the last page it stays, so go home.
+                const int next = runtime_tiles::sequential_page(id(tile_page), 1);
+                runtime_tiles::go_to_page(next != id(tile_page) ? next : runtime_tiles::home_page(), false);
 
   # Wake that is light, not a tap (0.2.56+): the one way in for every wake that is not a finger on the glass. Home
   # Assistant's Wake button, a board's own sensor (which presses that button) and a plugin (tessera::wake, plugin API
@@ -2858,3 +2900,17 @@ number:
     lambda: return settings_screen::auto_home_seconds;
     set_action:
       - lambda: 'settings_screen::set("auto_home_seconds", (int32_t) lround(x));'
+  - platform: template
+    id: setting_auto_cycle_seconds
+    name: "Cycle pages every"
+    icon: "mdi:timer-outline"
+    entity_category: config
+    min_value: 10
+    max_value: 600
+    step: 10
+    mode: box
+    unit_of_measurement: "s"
+    update_interval: never
+    lambda: return settings_screen::auto_cycle_seconds;
+    set_action:
+      - lambda: 'settings_screen::set("auto_cycle_seconds", (int32_t) lround(x));'

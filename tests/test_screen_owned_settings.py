@@ -59,11 +59,13 @@ ENTITY_IDS = {
     'swipe_pages': 'switch.office_1_swipe_between_pages', 'rotation': 'select.office_1_rotation',
     'dark_mode': 'switch.office_1_dark_mode', 'page_buttons': 'switch.office_1_page_buttons',
     'home_button': 'switch.office_1_show_home_button',
+    'auto_cycle': 'switch.office_1_cycle_pages', 'auto_cycle_seconds': 'number.office_1_cycle_pages_every',
 }
 STATES = {'brightness': '80.0', 'standby_enabled': 'on', 'standby_seconds': '600.0', 'standby_brightness': '20.0',
           'night_enabled': 'on', 'night_start': '22:30:00', 'night_end': '07:00:00', 'night_brightness': '5.0',
           'auto_home': 'on', 'auto_home_seconds': '120.0', 'home_on_standby': 'off',
-          'swipe_pages': 'on', 'rotation': '90°', 'dark_mode': 'off', 'page_buttons': 'on', 'home_button': 'on'}
+          'swipe_pages': 'on', 'rotation': '90°', 'dark_mode': 'off', 'page_buttons': 'on', 'home_button': 'on',
+          'auto_cycle': 'off', 'auto_cycle_seconds': '30.0'}
 
 
 def top_block(text, key):

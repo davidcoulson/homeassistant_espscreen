@@ -175,6 +175,8 @@
       "swipe_between_pages": "Zwischen Seiten wischen",
       "page_buttons": "Seitentasten",
       "home_button": "Home-Taste zeigen",
+      "cycle_pages": "Seiten wechseln",
+      "every": "Alle",
       "rotation": "Drehung",
       "address": "Adresse",
       "firmware": "Firmware",
@@ -3064,6 +3066,8 @@
         "swipe_pages": "Zwischen Seiten wischen",
         "page_buttons": "Seitentasten",
         "home_button": "Home-Taste zeigen",
+        "auto_cycle": "Seiten wechseln",
+        "auto_cycle_seconds": "Alle",
         "rotation": "Drehung"
       },
       "actions": {

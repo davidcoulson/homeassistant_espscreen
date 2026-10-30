@@ -175,6 +175,8 @@
       "swipe_between_pages": "Przesuwanie stron",
       "page_buttons": "Przyciski stron",
       "home_button": "Pokaż przycisk strony głównej",
+      "cycle_pages": "Przełączaj strony",
+      "every": "Co",
       "rotation": "Obrót",
       "address": "Adres",
       "firmware": "Firmware",
@@ -3064,6 +3066,8 @@
         "swipe_pages": "Przesuwanie stron",
         "page_buttons": "Przyciski stron",
         "home_button": "Pokaż przycisk strony głównej",
+        "auto_cycle": "Przełączaj strony",
+        "auto_cycle_seconds": "Co",
         "rotation": "Obrót"
       },
       "actions": {

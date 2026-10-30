@@ -175,6 +175,8 @@
       "swipe_between_pages": "Vegen tussen pagina's",
       "page_buttons": "Paginaknoppen",
       "home_button": "Thuisknop tonen",
+      "cycle_pages": "Pagina's wisselen",
+      "every": "Elke",
       "rotation": "Rotatie",
       "address": "Adres",
       "firmware": "Firmware",
@@ -2629,6 +2631,8 @@
         "swipe_pages": "Vegen tussen pagina's",
         "page_buttons": "Paginaknoppen",
         "home_button": "Thuisknop tonen",
+        "auto_cycle": "Pagina's wisselen",
+        "auto_cycle_seconds": "Elke",
         "rotation": "Rotatie"
       },
       "actions": {

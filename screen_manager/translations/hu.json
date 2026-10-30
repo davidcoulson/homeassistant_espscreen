@@ -175,6 +175,8 @@
       "swipe_between_pages": "Lapozás húzással",
       "page_buttons": "Lapozógombok",
       "home_button": "Kezdőlap gomb",
+      "cycle_pages": "Oldalak váltása",
+      "every": "Minden",
       "rotation": "Elforgatás",
       "address": "Cím",
       "firmware": "Firmware",
@@ -3064,6 +3066,8 @@
         "swipe_pages": "Lapozás húzással",
         "page_buttons": "Lapozógombok",
         "home_button": "Kezdőlap gomb",
+        "auto_cycle": "Oldalak váltása",
+        "auto_cycle_seconds": "Minden",
         "rotation": "Elforgatás"
       },
       "actions": {

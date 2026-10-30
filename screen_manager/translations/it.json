@@ -175,6 +175,8 @@
       "swipe_between_pages": "Scorri tra le pagine",
       "page_buttons": "Pulsanti pagina",
       "home_button": "Mostra il pulsante home",
+      "cycle_pages": "Scorri le pagine",
+      "every": "Ogni",
       "rotation": "Rotazione",
       "address": "Indirizzo",
       "firmware": "Firmware",
@@ -3064,6 +3066,8 @@
         "swipe_pages": "Scorri tra le pagine",
         "page_buttons": "Pulsanti pagina",
         "home_button": "Mostra il pulsante home",
+        "auto_cycle": "Scorri le pagine",
+        "auto_cycle_seconds": "Ogni",
         "rotation": "Rotazione"
       },
       "actions": {

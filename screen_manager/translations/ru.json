@@ -175,6 +175,8 @@
       "swipe_between_pages": "Листать страницы",
       "page_buttons": "Кнопки страниц",
       "home_button": "Кнопка «Домой»",
+      "cycle_pages": "Листать страницы",
+      "every": "Каждые",
       "rotation": "Поворот",
       "address": "Адрес",
       "firmware": "Прошивка",
@@ -2629,6 +2631,8 @@
         "swipe_pages": "Листать страницы",
         "page_buttons": "Кнопки страниц",
         "home_button": "Кнопка «Домой»",
+        "auto_cycle": "Листать страницы",
+        "auto_cycle_seconds": "Каждые",
         "rotation": "Поворот"
       },
       "actions": {

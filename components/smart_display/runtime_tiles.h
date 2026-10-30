@@ -106,11 +106,13 @@ using settings_screen::rotation;
 using settings_screen::quarter_turns;
 using settings_screen::auto_home;
 using settings_screen::auto_home_seconds;
+using settings_screen::auto_cycle;
+using settings_screen::auto_cycle_seconds;
 using settings_screen::page_buttons;
 inline esphome::ESPPreferenceObject rotation_preference;
 inline esphome::ESPPreferenceObject buttons_preference;
 inline esphome::ESPPreferenceObject swipe_preference;
-inline esphome::ESPPreferenceObject home_preference;
+inline esphome::ESPPreferenceObject home_preference, cycle_preference;
 inline esphome::ESPPreferenceObject dark_preference;
 inline esphome::ESPPreferenceObject debug_preference;
 // Debug mode (settings_screen.h): the logger at the level the firmware is built with while it is on, warnings and
@@ -530,11 +532,14 @@ inline std::function<void()> layout_changed, refresh, dismiss, settings_changed;
 inline esphome::ESPPreferenceObject settings_preference;
 // The two extra values of 0.2.44+ in one record: going back to page 1 by itself, and after how long.
 struct HomeTimeout { uint32_t enabled = 1, seconds = 120; };
+// Page auto-cycle in one record of its own (a new key; the Back to Home record keeps its shape).
+struct CycleSetting { uint32_t enabled = 0, seconds = 30; };
 inline void alarm_load_lock();
 inline void load_settings() {
   settings_preference = esphome::global_preferences->make_preference<screen_settings::Settings>(0x53435231);
   swipe_preference = esphome::global_preferences->make_preference<uint32_t>(0x53575031);
   home_preference = esphome::global_preferences->make_preference<HomeTimeout>(0x484F4D31);
+  cycle_preference = esphome::global_preferences->make_preference<CycleSetting>(0x43594331);
   dark_preference = esphome::global_preferences->make_preference<uint32_t>(0x44524B31);
   buttons_preference = esphome::global_preferences->make_preference<uint32_t>(0x50474231);
   debug_preference = esphome::global_preferences->make_preference<uint32_t>(0x44424731);
@@ -553,6 +558,10 @@ inline void load_settings() {
   HomeTimeout home;
   if(home_preference.load(&home) && home.seconds>=30 && home.seconds<=3600){
     auto_home=home.enabled?1:0;auto_home_seconds=(int32_t)home.seconds;
+  }
+  CycleSetting cycle;
+  if(cycle_preference.load(&cycle) && cycle.seconds>=10 && cycle.seconds<=600){
+    auto_cycle=cycle.enabled?1:0;auto_cycle_seconds=(int32_t)cycle.seconds;
   }
   // The turn the screen was left at (every board since firmware 0.2.80, the Guition before that). A quarter turn
   // saved on glass that cannot take one (a board file that changed) is left where it is.
@@ -578,6 +587,8 @@ inline void persist_settings() {
   swipe_preference.save(&swipe);
   HomeTimeout home{(uint32_t) (auto_home ? 1 : 0), (uint32_t) std::clamp<int32_t>(auto_home_seconds, 30, 3600)};
   home_preference.save(&home);
+  CycleSetting cycle{(uint32_t) (auto_cycle ? 1 : 0), (uint32_t) std::clamp<int32_t>(auto_cycle_seconds, 10, 600)};
+  cycle_preference.save(&cycle);
   uint32_t dark = settings_screen::dark_mode ? 1 : 0;
   dark_preference.save(&dark);
   uint32_t buttons = page_buttons ? 1 : 0;

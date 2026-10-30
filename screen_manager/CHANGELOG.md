@@ -1,5 +1,7 @@
 ## Unreleased
 
+- **A wall panel can turn its pages by itself.** Settings, Screen has a new Cycle pages switch (off) and an Every time (10 to 600 seconds, 30 by default): after that long without a touch the screen moves to the next page, and from the last page back to the first. Both are also entities in Home Assistant, so an automation can turn cycling on at night. Back to Home wins when both are on. Needs firmware from this release.
+
 - **The app builds with ESPHome 2026.10.1** (it was 2026.9.0). The boards' minimum versions stay as they were, so a build in your own ESPHome Device Builder works as before.
 
 - **Tessera is looking for funding.** The home overview asks for it, before the support card, with a button that mails Max: a day job comes first, and Tessera needs funding to stay alive. "Not now" puts it away for a week.

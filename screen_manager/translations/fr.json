@@ -175,6 +175,8 @@
       "swipe_between_pages": "Balayer entre les pages",
       "page_buttons": "Boutons de page",
       "home_button": "Afficher le bouton accueil",
+      "cycle_pages": "Faire défiler les pages",
+      "every": "Toutes les",
       "rotation": "Rotation",
       "address": "Adresse",
       "firmware": "Firmware",
@@ -3064,6 +3066,8 @@
         "swipe_pages": "Balayer entre les pages",
         "page_buttons": "Boutons de page",
         "home_button": "Afficher le bouton accueil",
+        "auto_cycle": "Faire défiler les pages",
+        "auto_cycle_seconds": "Toutes les",
         "rotation": "Rotation"
       },
       "actions": {

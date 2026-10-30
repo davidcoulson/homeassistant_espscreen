@@ -175,6 +175,8 @@
       "swipe_between_pages": "Swipe between pages",
       "page_buttons": "Page buttons",
       "home_button": "Show home button",
+      "cycle_pages": "Cycle pages",
+      "every": "Every",
       "rotation": "Rotation",
       "address": "Address",
       "firmware": "Firmware",
@@ -2629,6 +2631,8 @@
         "swipe_pages": "Swipe between pages",
         "page_buttons": "Page buttons",
         "home_button": "Show home button",
+        "auto_cycle": "Cycle pages",
+        "auto_cycle_seconds": "Every",
         "rotation": "Rotation"
       },
       "actions": {

@@ -957,13 +957,17 @@ SETTING_RULES = {
     # The house at the far left of the top bar (firmware 0.2.100+), which takes the screen back to page 1. Page 1
     # draws none. Only a screen that owns its settings has it, like dark_mode.
     'home_button': (True, None, None),
+    # Page auto-cycle for a wall panel: the next page every N seconds without a touch. Only a screen that owns its
+    # settings has it, like dark_mode.
+    'auto_cycle': (False, None, None),
+    'auto_cycle_seconds': (30, 10, 600),
 }
 # Firmware before 0.2.44 accepts a `settings` object with exactly its own eleven keys and refuses any
 # other size, so everything added after it travels as its own key in the layout message. Old firmware
 # ignores a key it does not know; a new screen with an old add-on keeps what it saved itself.
 # docs/SETTINGS.md walks through adding one.
 SETTINGS_BESIDE_BLOCK = ('swipe_pages', 'rotation', 'auto_home', 'auto_home_seconds', 'dark_mode', 'page_buttons',
-                         'home_button')
+                         'home_button', 'auto_cycle', 'auto_cycle_seconds')
 
 # ----- The screen owns its settings (firmware 0.2.49+) -----
 # A screen offers every setting as an entity of its own device, and the settings page on the screen, Home
@@ -989,6 +993,8 @@ SETTING_ENTITIES = {
     'dark_mode': ('switch', 'Dark mode'),
     'page_buttons': ('switch', 'Page buttons'),
     'home_button': ('switch', 'Show home button'),
+    'auto_cycle': ('switch', 'Cycle pages'),
+    'auto_cycle_seconds': ('number', 'Cycle pages every'),
 }
 # Entities firmware 0.2.49 added; one of them on a device means the screen owns its settings. The first five
 # existed before, so they cannot tell.

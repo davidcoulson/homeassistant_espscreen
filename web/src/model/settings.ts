@@ -26,6 +26,8 @@ export const SETTING_GROUPS = [
     { key: "swipe_pages", kind: "toggle" },
     { key: "page_buttons", kind: "toggle" },
     { key: "home_button", kind: "toggle" },
+    { key: "auto_cycle", kind: "toggle" },
+    { key: "auto_cycle_seconds", kind: "duration", min: 10, max: 600, needs: "auto_cycle" },
     { key: "rotation", kind: "choice", options: [0, 90, 180, 270] },
   ] },
 ] as const;

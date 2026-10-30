@@ -30,6 +30,7 @@ changes them with the entity's own action, and leaves them out of the layout mes
 | Swipe between pages | `switch.<screen>_swipe_between_pages` | `swipe_pages` |
 | Page buttons (0.2.69+) | `switch.<screen>_page_buttons` | `page_buttons` |
 | Show home button (0.2.100+) | `switch.<screen>_show_home_button` | `home_button` |
+| Cycle pages, Every | `switch.<screen>_cycle_pages`, `number.<screen>_cycle_pages_every` | `auto_cycle` (off), `auto_cycle_seconds` (10 to 600, 30); the screen's own: it never travels in the layout message. Steps to the next page after this long without a touch, and from the last page to the first; Back to Home wins when both are on and its time has run out |
 | Rotation | `select.<screen>_rotation` | `rotation` (0.2.80+ on every board: a half turn on any glass, the quarter turns as well on a square one; standing up or lying down on other glass is the editor's Grid button, firmware 0.53.0+, because it changes the grid) |
 | Debug mode (This screen) | `switch.<screen>_debug_mode`, a diagnostic entity | none: the screen and Home Assistant only, and the troubleshooting report, which turns it on for its own read of the log |
 

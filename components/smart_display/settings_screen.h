@@ -37,6 +37,9 @@ inline int32_t swipe_pages = 0, rotation = 0, auto_home = 1, auto_home_seconds =
 // wherever it stands. On page 1 there is nowhere to go, so it is not drawn there and the page title starts at the
 // margin as it always did. Off, the bar is exactly what it was.
 inline int32_t home_button = 1;
+// Page auto-cycle for a wall panel: every `auto_cycle_seconds` without a touch the screen moves to the next page, and
+// after the last to the first. Off until someone turns it on; Back to Home wins when both are on.
+inline int32_t auto_cycle = 0, auto_cycle_seconds = 30;
 // Debug mode: the screen's whole log while on (INFO, and DEBUG where its YAML builds that level), its warnings and
 // errors alone while off, which is how a screen starts. Every line the screen writes, to its UART or to a subscriber of
 // its log in Home Assistant or Tessera, came with a flash on the live tiles of a Guition 10.1 (2026-10-27,
@@ -202,7 +205,7 @@ inline SetResult set(const std::string &key, int32_t value) {
   const auto before = s;
   const int32_t before_swipe = swipe_pages, before_rotation = rotation, before_home = auto_home,
                 before_home_seconds = auto_home_seconds, before_dark = dark_mode, before_buttons = page_buttons,
-                before_home_button = home_button;
+                before_home_button = home_button, before_cycle = auto_cycle, before_cycle_seconds = auto_cycle_seconds;
   int32_t reported = 0;
   auto flag = [](int32_t v) -> int32_t { return v ? 1 : 0; };
   if (key == "standby_enabled") reported = s.standby_enabled = flag(value);
@@ -226,13 +229,15 @@ inline SetResult set(const std::string &key, int32_t value) {
   }
   else if (key == "auto_home") reported = auto_home = flag(value);
   else if (key == "auto_home_seconds") reported = auto_home_seconds = std::clamp<int32_t>(value, 30, 3600);
+  else if (key == "auto_cycle") reported = auto_cycle = flag(value);
+  else if (key == "auto_cycle_seconds") reported = auto_cycle_seconds = std::clamp<int32_t>(value, 10, 600);
   else if (key == "dark_mode") reported = dark_mode = flag(value);
   else if (key == "page_buttons") reported = page_buttons = flag(value);
   else if (key == "home_button") reported = home_button = flag(value);
   else return SetResult::unknown;
   if (s == before && swipe_pages == before_swipe && rotation == before_rotation && auto_home == before_home &&
       auto_home_seconds == before_home_seconds && dark_mode == before_dark && page_buttons == before_buttons &&
-      home_button == before_home_button)
+      home_button == before_home_button && auto_cycle == before_cycle && auto_cycle_seconds == before_cycle_seconds)
     return SetResult::same;
   changed(key.c_str(), reported);
   return SetResult::changed;
@@ -409,6 +414,11 @@ inline constexpr Row screen_rows[] = {
   duration(screen_text::txt::settings_after, []() -> int32_t { return auto_home_seconds; },
            [](int32_t value) { set("auto_home_seconds", value); }, 30, 3600,
            [] { return auto_home != 0; }),
+  toggle(screen_text::txt::settings_cycle_pages, []() -> int32_t { return auto_cycle; },
+         [](int32_t value) { set("auto_cycle", value); }),
+  duration(screen_text::txt::settings_every, []() -> int32_t { return auto_cycle_seconds; },
+           [](int32_t value) { set("auto_cycle_seconds", value); }, 10, 600,
+           [] { return auto_cycle != 0; }),
   toggle(screen_text::txt::settings_also_on_standby, []() -> int32_t { return screen_settings::current.home_on_standby; },
          [](int32_t value) { set("home_on_standby", value); },
          [] { return can_standby; }),
