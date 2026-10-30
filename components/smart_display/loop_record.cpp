@@ -12,9 +12,17 @@
 #include <freertos/task.h>
 #include <esp_private/freertos_debug.h>
 
+// The main loop's task: ESPHome 2026.10 keeps it in esphome_main_task_handle (esphome/core/main_task.h), before that in
+// esphome::loop_task_handle (esphome/components/esp32/core.cpp).
+#if __has_include("esphome/core/main_task.h")
+#include "esphome/core/main_task.h"
+static inline TaskHandle_t main_loop_task() { return esphome_main_task_handle; }
+#else
 namespace esphome {
-extern TaskHandle_t loop_task_handle;  // the main loop's task, esphome/components/esp32/core.cpp
+extern TaskHandle_t loop_task_handle;
 }
+static inline TaskHandle_t main_loop_task() { return esphome::loop_task_handle; }
+#endif
 
 namespace loop_record {
 
@@ -88,7 +96,7 @@ void report() {
 // ESP-IDF calls this in the task watchdog's interrupt, before it prints and aborts (task_wdt.c). The main loop is the
 // one task the watchdog watches on these screens, so its stack is what to keep: no logging here, an interrupt.
 extern "C" void esp_task_wdt_isr_user_handler(void) {
-  TaskHandle_t loop = esphome::loop_task_handle;
+  TaskHandle_t loop = main_loop_task();
   if (loop == nullptr) return;
   TaskSnapshot_t snapshot;
   if (vTaskGetSnapshot(loop, &snapshot) != pdTRUE) return;
