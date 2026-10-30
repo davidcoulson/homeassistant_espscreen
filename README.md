@@ -472,7 +472,7 @@ AliExpress being AliExpress, that link may go dead at some point. If it does, se
 "ESP32-S3-4848S040" and check the listing says 480 x 480, ST7701S and a capacitive GT911
 touch panel before you order.
 
-Tessera builds with its own **ESPHome 2026.9.0**. The firmware also builds in your own ESPHome Device Builder
+Tessera builds with its own **ESPHome 2026.10.1**. The firmware also builds in your own ESPHome Device Builder
 with ESPHome 2026.6.2 or newer; the 10.1-inch Guition asks for 2026.8.0 or newer, because its touch panel is
 newer than that.
 

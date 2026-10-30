@@ -1,5 +1,5 @@
 # Official ESPHome distribution: compiler, ESP-IDF, esptool and OTA CLI included.
-FROM ghcr.io/esphome/esphome:2026.9.0
+FROM ghcr.io/esphome/esphome:2026.10.1
 ARG BUILD_VERSION
 ARG BUILD_ARCH
 # The Supervisor passes BUILD_ARCH (aarch64, amd64). The image GitHub builds for Docker (docker.yml) builds both
