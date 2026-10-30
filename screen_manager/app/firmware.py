@@ -461,7 +461,7 @@ class Firmware:
         if not ours or any(not our_ref(packages[key].get('ref')) for key in ours):
             return False
         changed = False
-        line = re.compile(r'(?m)^([ \t]+ref:[ \t]*)(["\']?)(main|dev|screens-v\d+\.\d+\.\d+)\2([ \t]*(?:#.*)?)$')
+        line = re.compile(rf'(?m)^([ \t]+ref:[ \t]*)(["\']?)(main|dev|{re.escape(REF)}|screens-v\d+\.\d+\.\d+)\2([ \t]*(?:#.*)?)$')
         for key in ours:
             if packages[key]['ref'] == branch:
                 continue

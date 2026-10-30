@@ -46,6 +46,7 @@ import time
 import aiohttp
 
 import atomic
+from core import REF
 
 LOG = logging.getLogger('screen_manager')
 
@@ -784,7 +785,7 @@ class BuildServer:
 # release tag or a commit always builds the same. Seen 2026-10-29: a reinstall from dev took the build of 37 minutes
 # before and installed the firmware the screen already had.
 REUSE_MOVING_SECONDS = 120
-MOVING_REF = re.compile(r'(?m)^[ \t]+ref:[ \t]*["\']?(?:main|dev)["\']?[ \t]*(?:#.*)?$')
+MOVING_REF = re.compile(rf'(?m)^[ \t]+ref:[ \t]*["\']?(?:main|dev|{re.escape(REF)})["\']?[ \t]*(?:#.*)?$')
 
 
 def follows_branch(profile):

@@ -90,13 +90,13 @@ class Channel(unittest.TestCase):
 
     def test_a_new_screen_builds_from_the_channel(self):
         data = {'board': 'guition', 'name': 'hall', 'friendly_name': 'Hall'}
-        for channel, ref in ((None, 'main'), ('main', 'main'), ('dev', 'dev')):
+        for channel, ref in ((None, 'crowpanel7'), ('main', 'main'), ('dev', 'dev')):
             with self.subTest(channel):
                 set_channel(channel)
                 screen = load(installation_yaml(data))
                 self.assertEqual(screen['packages']['display']['ref'], ref)
                 # The components and fonts follow; main is the package's own default and needs no line.
-                self.assertEqual(screen['substitutions'].get('GITHUB_REF'), 'dev' if ref == 'dev' else None)
+                self.assertEqual(screen['substitutions'].get('GITHUB_REF'), None if ref == 'crowpanel7' else ref)
 
     def test_every_published_entry_fetches_its_components_and_fonts_from_the_ref(self):
         for path in [*sorted((ROOT / 'packages').glob('*.yaml'))]:
@@ -104,7 +104,7 @@ class Channel(unittest.TestCase):
             if not isinstance(entry, dict) or 'external_components' not in entry:
                 continue
             with self.subTest(path.name):
-                self.assertEqual(entry['substitutions']['GITHUB_REF'], 'main')
+                self.assertEqual(entry['substitutions']['GITHUB_REF'], 'crowpanel7')
                 self.assertEqual({source['source']['ref'] for source in entry['external_components']}, {'${GITHUB_REF}'})
                 if 'FONT_DIR' in entry['substitutions']:
                     self.assertIn('/${GITHUB_REF}/fonts', entry['substitutions']['FONT_DIR'])

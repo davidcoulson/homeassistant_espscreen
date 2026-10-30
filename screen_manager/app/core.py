@@ -166,7 +166,7 @@ def ref():
 def our_ref(value):
     """A `ref:` the app may move: main, dev or one of its own release tags. A tag, a commit, a branch or a fork the
     owner chose stays theirs."""
-    return isinstance(value, str) and (value in CHANNELS.values() or bool(RELEASE_TAG.match(value)))
+    return isinstance(value, str) and (value in CHANNELS.values() or value == REF or bool(RELEASE_TAG.match(value)))
 # The shared firmware of this app release: packages/core.yaml's SCREEN_FIRMWARE_VERSION, what every board builds
 # unless its own board file went ahead with a fix for that board alone (firmware_target, docs/BOARD_RELEASES.md). The
 # middle number is the core: the feature gates below name a shared X.Y.0, so a feature always ships with a new core.
